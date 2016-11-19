@@ -1,3 +1,36 @@
+<?php
+
+	include('connection.php');
+
+	// Get values passed from form in login.php file
+	$username = $_POST['user'];
+	$password = $_POST['pass'];
+	//$pass_confirm = $_POST['pass_confirm'];
+
+	// To prevent mysql injection
+	$username = stripcslashes($username);
+	$password = stripcslashes($password);
+	//$pass_confirm = stripcslashes($pass_confirm);
+	$username = mysqli_real_escape_string($connection, $username);
+	$password = mysqli_real_escape_string($connection, $password);
+	//$pass_confirm = mysqli_real_escape_string($connection, $pass_confirm);
+
+	$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+	$check_username = mysqli_query($connection, "SELECT * FROM users WHERE username='$username'");
+	$count = $check_username->num_rows;
+
+	if ($count == 0) {
+		// Query the database for user
+		$result = mysqli_query($connection, "INSERT INTO users(username,password) VALUES('$username','$hashed_password')")
+			or die("Failed  to query database " .mysql_error());
+		
+		echo("Successfully registered");
+	} else {
+		echo("Username is already taken. Please register again.");
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,12 +42,12 @@
     <meta name="description" content="GeoCrypto Encryption Software">
     <meta name="author" content="CS321 Team 3">
 
-    <title>GeoCrypto Login</title>
+    <title>GeoCrypto Registration</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 
     <!-- Custom CSS -->
     <style>
@@ -65,28 +98,19 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h1>GeoCrypto</h1>
-                <p class="lead">A Location-Based Encyption and Decryption Tool</p>
+                <p class="lead">Registration</p>
             </div>
         </div>
         <!-- /.row -->
-
-        <div id="frm">
-            <form action="process.php" method="POST">
-                <p>
-                    <label>Username:</label>
-                    <input type="text" id="user" name="user"/>
-                </p>
-                <p>
-                    <label>Password:</label>
-                    <input type="password" id="pass" name="pass"/>
-                </p>
-                <p>
-                    <input type="submit" id="btn" value="Login"/>
-                </p>
-            </form>
+        <div class="row">
+        	<p>If you have successfully registered, please login</p>
+        	<a href="index.html" class="btn btn-default">Login</a>
         </div>
-        <a href="registration.php" class="btn btn-default">Register!</a>
 
+        <div class="row">
+        	<p>If you did not successfully register, please attempt to register again.</p>
+        	<a href="registration.php" class="btn btn-default">Register</a>
+        </div>
     </div>
     <!-- /.container -->
 
@@ -99,3 +123,4 @@
 </body>
 
 </html>
+
