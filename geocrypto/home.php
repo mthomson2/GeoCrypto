@@ -1,3 +1,25 @@
+<?php
+if($_POST['formSubmit'] == "Submit")
+{
+	$errorMessage = "";
+	
+	if(empty($_POST['formupload']))
+	{
+		$errorMessage .= "<li>You forgot to enter a file name!</li>";
+		
+	}
+	
+	if(empty($errorMessage)) 
+	{
+		
+		header("Location: thankyou.html");
+		exit;
+	}
+	
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,6 +84,8 @@
     <!-- Page Content -->
     <div class="container">
 
+		
+
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h1>GeoCrypto</h1>
@@ -71,20 +95,32 @@
         <!-- /.row -->
 
         <div id="frm">
-			<form action="reg_process.php" method="POST">
+			
+			<script language="JavaScript" type="text/javascript">
+			function HandleBrowseClick()
+			{
+				var fileinput = document.getElementById("browse");
+				fileinput.click();
+			}
+
+			function Handlechange()
+			{
+				var fileinput = document.getElementById("browse");
+				var textinput = document.getElementById("filename");
+				textinput.value = fileinput.value;
+			}
+			</script>
+			
+			
+			<form action="home.php" method="POST" enctype="multipart/form-data">
 				<p>
-					<label>File: </label>
-					<input type="text" id="file" name="file"/>
+					Please upload a file: <br>
+					<input type="file" id="browse" name="fileupload" style="display: none" onChange="Handlechange();" />
 				</p>
-				<p>
-					<input type="radio" id="encrypt" name="encrypt" value="Encrypt"/>
-				</p>
-                <p>
-                    <input type="radio" id="decrypt" name="decrypt" value="Decrypt"/>
-                </p>
-				<p>
-					<input type="submit" id="btn" value="Submit"/>
-				</p>
+		
+				<input type="text" id="filename" readonly="true"/>
+				<input type="button" value="Click to select file" id="fakeBrowse" onclick="HandleBrowseClick();"/>
+				<input type="submit" name="formSubmit" value="Submit" />
 			</form>
 		</div>
 
