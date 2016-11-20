@@ -14,6 +14,9 @@ if($_POST['formSubmit'] == "Submit")
 		
 		header("Location: thankyou.html");
 		exit;
+	}else{
+		header("Location: uploadError.html");
+		exit;
 	}
 	
 }
