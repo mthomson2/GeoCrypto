@@ -9,12 +9,12 @@
     <meta name="description" content="GeoCrypto Encryption Software">
     <meta name="author" content="CS321 Team 3">
 
-    <title>GeoCrypto Login</title>
+    <title>GeoCrypto Home</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 
     <!-- Custom CSS -->
     <style>
@@ -65,27 +65,50 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h1>GeoCrypto</h1>
-                <p class="lead">A Location-Based Encyption and Decryption Tool</p>
+                <p class="lead">Home</p>
             </div>
         </div>
         <!-- /.row -->
 
         <div id="frm">
-            <form action="process.php" method="POST">
+			<form action="reg_process.php" method="POST">
+				<p>
+					<label>File: </label>
+					<input type="text" id="file" name="file"/>
+				</p>
+				<p>
+					<input type="radio" id="encrypt" name="encrypt" value="Encrypt"/>
+				</p>
                 <p>
-                    <label>Username:</label>
-                    <input type="text" id="user" name="user"/>
+                    <input type="radio" id="decrypt" name="decrypt" value="Decrypt"/>
                 </p>
-                <p>
-                    <label>Password:</label>
-                    <input type="password" id="pass" name="pass"/>
-                </p>
-                <p>
-                    <input type="submit" id="btn" value="Login"/>
-                </p>
-            </form>
-        </div>
-        <a href="registration.php" class="btn btn-primary">Register!</a>
+				<p>
+					<input type="submit" id="btn" value="Submit"/>
+				</p>
+			</form>
+		</div>
+
+        <!-- Getting user location -->
+        <p id="location"></p>
+
+        <script>
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                // Get current cordinates.
+                positionCords = {"lat": position.coords.latitude, "lng": position.coords.longitude};
+            },
+            function(error) {
+                alert("Error");
+            },
+            {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+                );
+            }  
+        };
+        </script>
+
+
 
     </div>
     <!-- /.container -->
