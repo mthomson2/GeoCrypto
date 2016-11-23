@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p> Encrypt String </p>
+<p id="key"></p>
+<p id="encrypt"></p>
+<p id="decrypt"></p>
+<button onclick="main()"> Encrypt </button>
+
+<script>
+function main()
+ {
+   var string = "abcdefg";
+   var lng = 1234.5;
+   var lat = 987.6;
+   var key = hash(lng, lat);
+   document.getElementById("key").innerHTML = "key is " + key;
+   var en = encrypt(key, string);
+   document.getElementById("encrypt").innerHTML = "encrypted file is " + en;
+
+ }
+//function that takes a longitude and latitude to create
+  //a key 
+  function hash(lng,lat)
+  {
+   var key = lng * lat; 
+   return key;
+  }
+
+ function encrypt(key, file)
+  {
+   //file is a string for now
+   file = file + key;
+   return file;
+
+  }
+
+ 
+
+</script>
+
+</body>
+</html>
+
+
