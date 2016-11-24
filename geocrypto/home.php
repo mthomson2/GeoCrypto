@@ -1,28 +1,3 @@
-<?php
-if($_POST['formSubmit'] == "Submit")
-{
-	$errorMessage = "";
-	
-	if(empty($_POST['formupload']))
-	{
-		$errorMessage .= "<li>You forgot to enter a file name!</li>";
-		
-	}
-	
-	if(empty($errorMessage)) 
-	{
-		
-		header("Location: thankyou.html");
-		exit;
-	}else{
-		header("Location: uploadError.html");
-		exit;
-	}
-	
-}
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -98,40 +73,20 @@ if($_POST['formSubmit'] == "Submit")
         <!-- /.row -->
 
         <div id="frm">
-			
-			<script language="JavaScript" type="text/javascript">
-			function HandleBrowseClick()
-			{
-				var fileinput = document.getElementById("browse");
-				fileinput.click();
-			}
-
-			function Handlechange()
-			{
-				var fileinput = document.getElementById("browse");
-				var textinput = document.getElementById("filename");
-				textinput.value = fileinput.value;
-			}
-			</script>
-			
-			
-			<form action="home.php" method="POST" enctype="multipart/form-data">
-				<p>
-					Please upload a file: <br>
-					<input type="file" id="browse" name="fileupload" style="display: none" onChange="Handlechange();" />
-				</p>
-		
-				<input type="text" id="filename" readonly="true"/>
-				<input type="button" value="Click to select file" id="fakeBrowse" onclick="HandleBrowseClick();"/>
-                <br>
-                <input type="radio" name="encrypt" value="encrypt" checked> Encrypt<br>
-                <input type="radio" name="encrypt" value="encrypt"> Decrypt<br>
-                <button
-				<input type="submit" name="formSubmit" value="Submit" />
+			This form allows you to upload a file to the server.<br>
+			<form action="uploads.php" method="post" enctype="multipart/form-data" ><br>
+				Type (or select) Filename: <input type="file" name="myFile">
+				
+				<input type="radio" name="encrypt" value="encrypt" checked> Encrypt<br>
+				<input type="radio" name="decrypt" value="decrypt"> Decrypt<br>
+				
+				<input type="submit" value="Upload">
 			</form>
-		</div>
-
-        <!-- Getting the location -->
+		
+		
+		
+		
+		<!-- Getting the location -->
         <p>Click the button to get your coordinates.</p>
 
         <button onclick="getLocation()">Get Location!</button>
@@ -140,7 +95,6 @@ if($_POST['formSubmit'] == "Submit")
 
         <script>
         var x = document.getElementById("demo");
-
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -148,12 +102,10 @@ if($_POST['formSubmit'] == "Submit")
                 x.innerHTML = "Geolocation is not supported by this browser.";
             }
         }
-
         function showPosition(position) {
             x.innerHTML = "Latitude: " + position.coords.latitude + 
             "<br>Longitude: " + position.coords.longitude;
         }
-
         function showError(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
@@ -184,3 +136,5 @@ if($_POST['formSubmit'] == "Submit")
 </body>
 
 </html>
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help
