@@ -32,12 +32,23 @@ if (!empty($_FILES["myFile"])) {
     chmod(UPLOAD_DIR . $name, 0644);
     if ($success) { 
         echo "<p>File Uploaded Successfully! :)</p>";
+        
         $file = fopen (UPLOAD_DIR . $name, "r");
 		if (!$file) {
 			echo "<p>Unable to open remote file.\n";
 			exit;
 		}
 		
+		
+		if ($_POST['encrypt'] == "encrypt")
+		{
+			echo "<p>User selected Encrypt\n";
+		}
+		else
+		{
+			echo "<p>User selected Decrypt\n";
+		}
+
         exit;
     }
     

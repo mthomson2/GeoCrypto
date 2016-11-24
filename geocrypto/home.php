@@ -78,7 +78,7 @@
 				Type (or select) Filename: <input type="file" name="myFile">
 				
 				<input type="radio" name="encrypt" value="encrypt" checked> Encrypt<br>
-				<input type="radio" name="decrypt" value="decrypt"> Decrypt<br>
+				<input type="radio" name="encrypt" value="decrypt"> Decrypt<br>
 				
 				<input type="submit" value="Upload">
 			</form>
