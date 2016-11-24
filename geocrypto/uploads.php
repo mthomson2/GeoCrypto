@@ -27,18 +27,19 @@ if (!empty($_FILES["myFile"])) {
         echo "<p>Unable to save file.</p>";
         exit;
     }
-
-    // set proper permissions on the new file
-    chmod(UPLOAD_DIR . $name, 0644);
-    if ($success) { 
-        echo "<p>File Uploaded Successfully! :)</p>";
+	else{
+		// set proper permissions on the new file
+		chmod(UPLOAD_DIR . $name, 0644);
         
-        $file = fopen (UPLOAD_DIR . $name, "r");
+        //UPLOAD_DIR . $name
+        $file = fopen(UPLOAD_DIR . $name, "r");
 		if (!$file) {
 			echo "<p>Unable to open remote file.\n";
 			exit;
 		}
 		
+		echo "<p>File Uploaded Successfully! :)</p>";
+		//echo "<p>Uploaded file saved as " . $name . ".</p>";
 		
 		if ($_POST['encrypt'] == "encrypt")
 		{
@@ -48,7 +49,8 @@ if (!empty($_FILES["myFile"])) {
 		{
 			echo "<p>User selected Decrypt\n";
 		}
-
+		
+		fclose($file);
         exit;
     }
     
