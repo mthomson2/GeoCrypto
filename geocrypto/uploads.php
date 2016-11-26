@@ -1,4 +1,5 @@
 <?php
+  session_start();
   // Get User IP
   $ip = $_SERVER['REMOTE_ADDR'];
   //Send the API request with user Ip
@@ -22,6 +23,8 @@
 		<!-- <div id="crypt"></div> -->
 
 		<?php
+		include('connection.php');
+
 		define("UPLOAD_DIR", "/home/mollyc6/public_html/geocrypto/uploads/");
 
 		if (!empty($_FILES["myFile"])) {
@@ -85,10 +88,16 @@
 					echo "<p>User selected Encrypt</p>";
 					
 					$string = mcrypt_encrypt(MCRYPT_TWOFISH, $key, $filetext, MCRYPT_MODE_CBC,"some 16 byte iv.");
-					echo "encrypted file is: ".$string;
+					$quser = $_SESSION["username"];
 
-					$decrypt = mcrypt_decrypt(MCRYPT_TWOFISH, $key, $string, MCRYPT_MODE_CBC,"some 16 byte iv.");
-					echo $decrypt;
+					$result = mysqli_query($connection, "SELECT id FROM users WHERE username = '$quser'")
+						or die("Failed  to query database " .mysql_error());
+
+					$row = $result->fetch_assoc();
+					$userFK = $row["id"];
+
+					$inserting = mysqli_query($connection, "INSERT INTO files(fileName,fileKey, userID) VALUES('$name','$key','$userFK')")
+						or die("Failed  to query database " .mysql_error());
 					
 				}
 				else

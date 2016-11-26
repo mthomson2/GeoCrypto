@@ -1,5 +1,7 @@
 <?php
 
+	session_start();
+
 	include('connection.php');
 
 	// Get values passed from form in login.php file
@@ -13,6 +15,9 @@
 	$password = mysqli_real_escape_string($connection, $password);
 
 	$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+	// echo "username is: " . $username;
+	$_SESSION["username"] = $username;
 
 	// Query the database for user
 	$result = mysqli_query($connection, "select * from users where username = '$username'")
