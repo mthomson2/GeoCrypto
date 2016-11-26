@@ -1,75 +1,44 @@
+<?php
+  // Get User IP
+  $ip = $_SERVER['REMOTE_ADDR'];
+  //Send the API request with user Ip
+  $ipinfoAPI = "http://ipinfo.io/{$ip}/json";
+  //get the APi requeted data
+  $load = file_get_contents($ipinfoAPI);
+  //Convert it to the readable format
+  $return = json_decode($load);
+
+  $keywords = preg_split("/[\s,]+/", $return->loc);
+
+?>
+
 <html>
     <head>
-       <title></title>
+       <title>Encrypting/Decrypting the File</title>
+       <script type="text/javascript" src="http://cryptojs.altervista.org/api/functions_cryptography.js"></script>
+
+       <script>
+			var Crypt = new Crypt();  // constructor  
+			function jscrypt() {
+				var fi = <?php echo json_encode($str); ?>;
+				alert(fi);
+				var ciphertext = Crypt.AES.encrypt(fi); 
+				var plaintext = Crypt.AES.decrypt(ciphertext);
+				alert(ciphertext);
+			}
+		</script>
+
 	</head>
 	<body>
-		
-		<script>
-		function hash(lng,lat)
-		{
-			var key = lng * lat; 
-			if (key < 0)
-			{
-				key = key * -1;
-			}
-			key = key /1234;
-			key = Math.floor(key);
-			return key;
-		}
-		
-		function encrypt(key, file)
-		{
-			//an array of words 
-			var ret = " ";
-			var words = file.split(" ");
-			for (var i =0; i <words.length; i++)
-			{
-				//one word at a time
-				var word = words[i];
-				for (var j =0; j <word.length; j++)
-				{
-					//one char at a time
-					var char = word.charCodeAt(j);
-					char = char + key;
-					ret = ret + " " + char;
-				}
-				ret = ret + "*";
-			}
-			return ret;
-		}
-		
-		function decrypt(key, encryptedfile)
-		{
-			var ret = " ";
-			encryptedfile = encryptedfile.trim();
-			var words = encryptedfile.split("*");
-			for(var i=0; i <words.length; i++)
-			{
-				if (i in words)//(words[i] != " ")
-				{
-					//get each word
-					var word = words[i].trim();
-					//array of char
-					var char = word.split(" ");
-					for(var j=0; j <char.length; j++)
-					{
-						if (j in char)
-						{
-							var dec = char[j].trim();
-							dec = parseFloat(dec) -key;
-							var dec = String.fromCharCode(dec);
-							ret = ret + dec;
-						}
-					}
-				}
-				ret = ret + " ";
-			}
-			return ret;
-		}
-		</script>
-		
+		<!-- <div id="crypt"></div> -->
+
 		<?php
 		define("UPLOAD_DIR", "/home/mollyc6/public_html/geocrypto/uploads/");
+
+		function escapeJavaScriptText($string) 
+		{ 
+		    return str_replace("\n", '\n', str_replace('"', '\"', addcslashes(str_replace("\r", '', (string)$string), "\0..\37'\\"))); 
+		} 
 
 		if (!empty($_FILES["myFile"])) {
 			$myFile = $_FILES["myFile"];
@@ -109,6 +78,9 @@
 					exit;
 				}
 				
+				$string_file = file_get_contents(UPLOAD_DIR . $name);
+				
+				$str = escapeJavaScriptText($string_file);
 				
 				echo "<p>File Uploaded Successfully! :)</p>";
 				
@@ -127,31 +99,20 @@
 				if ($_POST['encrypt'] == "encrypt")
 				{
 					echo "<p>User selected Encrypt</p>";
-					
-					//the following lines are calls to javascript and need to be edited
-					
-					//$lng= get longitube
-					//$lat= get latitude
-					//$key=hash($lng,$lat)
-					//encrypt($key, $filetext)
+					echo "<script> jscrypt(); </script>";
 					
 				}
 				else
 				{
 					echo "<p>User selected Decrypt</p>";
 					
-					//the following lines are calls to javascript and need to be edited
-					
-					//$key= get key
-					//decrypt($key, $filetext)
-					
 				}
 				
 				fclose($file);
 				
-				echo "<script>setTimeout(\"location.href = 'http://geocrypto.mollycodes.com/home.php';\",3500);</script>";
+				// echo "<script>setTimeout(\"location.href = 'http://geocrypto.mollycodes.com/home.php';\",3500);</script>";
 				
-				exit;
+				//exit;
 			}
 			
 		}
