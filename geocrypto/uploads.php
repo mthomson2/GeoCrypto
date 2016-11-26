@@ -105,6 +105,9 @@
 				// echo "<script>setTimeout(\"location.href = 'http://geocrypto.mollycodes.com/home.php';\",3500);</script>";
 				
 				//exit;
+
+				// Delete the file after use
+				array_map('unlink', glob(UPLOAD_DIR."/*.txt"));
 			}
 			
 		}
