@@ -10,25 +10,30 @@
 	// To prevent mysql injection
 	$username = stripcslashes($username);
 	$password = stripcslashes($password);
-	//$pass_confirm = stripcslashes($pass_confirm);
+	$pass_confirm = stripcslashes($pass_confirm);
 	$username = mysqli_real_escape_string($connection, $username);
 	$password = mysqli_real_escape_string($connection, $password);
-	//$pass_confirm = mysqli_real_escape_string($connection, $pass_confirm);
+	$pass_confirm = mysqli_real_escape_string($connection, $pass_confirm);
 
 	$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 	$check_username = mysqli_query($connection, "SELECT * FROM users WHERE username='$username'");
 	$count = $check_username->num_rows;
 
-	if ($count == 0) {
-		// Query the database for user
-		$result = mysqli_query($connection, "INSERT INTO users(username,password) VALUES('$username','$hashed_password')")
-			or die("Failed  to query database " .mysql_error());
+	if ($password==$pass_confirm){
+                if ($count == 0) {
+		        // Query the database for user
+		        $result = mysqli_query($connection, "INSERT INTO users(username,password) VALUES('$username','$hashed_password')")
+			        or die("Failed  to query database " .mysql_error());
 		
-		echo("Successfully registered");
-	} else {
-		echo("Username is already taken. Please register again.");
+		        echo("Successfully registered");
+	        } else {
+		        echo("Username is already taken. Please register again.");
+	        }
 	}
+        else{
+		echo("Password does not match.  Please try again.");
+        }
 ?>
 
 <!DOCTYPE html>
