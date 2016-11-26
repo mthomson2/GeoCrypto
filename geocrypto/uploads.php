@@ -10,35 +10,19 @@
 
   $keywords = preg_split("/[\s,]+/", $return->loc);
 
+  $key = $keywords[0].$keywords[1]."0";
+
 ?>
 
 <html>
     <head>
        <title>Encrypting/Decrypting the File</title>
-       <script type="text/javascript" src="http://cryptojs.altervista.org/api/functions_cryptography.js"></script>
-
-       <script>
-			var Crypt = new Crypt();  // constructor  
-			function jscrypt() {
-				var fi = <?php echo json_encode($str); ?>;
-				alert(fi);
-				var ciphertext = Crypt.AES.encrypt(fi); 
-				var plaintext = Crypt.AES.decrypt(ciphertext);
-				alert(ciphertext);
-			}
-		</script>
-
 	</head>
 	<body>
 		<!-- <div id="crypt"></div> -->
 
 		<?php
 		define("UPLOAD_DIR", "/home/mollyc6/public_html/geocrypto/uploads/");
-
-		function escapeJavaScriptText($string) 
-		{ 
-		    return str_replace("\n", '\n', str_replace('"', '\"', addcslashes(str_replace("\r", '', (string)$string), "\0..\37'\\"))); 
-		} 
 
 		if (!empty($_FILES["myFile"])) {
 			$myFile = $_FILES["myFile"];
@@ -80,7 +64,6 @@
 				
 				$string_file = file_get_contents(UPLOAD_DIR . $name);
 				
-				$str = escapeJavaScriptText($string_file);
 				
 				echo "<p>File Uploaded Successfully! :)</p>";
 				
@@ -95,16 +78,25 @@
 				//Tells us the name the file was saved as in the uploads folder
 				//echo "<p>Uploaded file saved as " . $name . ".</p>";
 				
+				$string = "";
 				
 				if ($_POST['encrypt'] == "encrypt")
 				{
 					echo "<p>User selected Encrypt</p>";
-					echo "<script> jscrypt(); </script>";
+					
+					$string = mcrypt_encrypt(MCRYPT_TWOFISH, $key, $filetext, MCRYPT_MODE_CBC,"some 16 byte iv.");
+					echo "encrypted file is: ".$string;
+
+					$decrypt = mcrypt_decrypt(MCRYPT_TWOFISH, $key, $string, MCRYPT_MODE_CBC,"some 16 byte iv.");
+					echo $decrypt;
 					
 				}
 				else
 				{
 					echo "<p>User selected Decrypt</p>";
+
+					$decrypt = mcrypt_decrypt(MCRYPT_TWOFISH, $key, $string, MCRYPT_MODE_CBC,"some 16 byte iv.");
+					// echo $decrypt;
 					
 				}
 				
