@@ -13,6 +13,7 @@
 
   $key = $keywords[0].$keywords[1]."0";
 
+
 ?>
 
 <html>
@@ -23,6 +24,8 @@
 		<!-- <div id="crypt"></div> -->
 
 		<?php
+
+		ob_start();
 		include('connection.php');
 
 		define("UPLOAD_DIR", "/home/mollyc6/public_html/geocrypto/uploads/");
@@ -35,6 +38,10 @@
 				exit;
 			}
 
+			$_SESSION["file_name"] = $myFile["name"];
+
+			$sess_file = $_SESSION["file_name"];
+
 			// ensure a safe filename
 			$name = preg_replace("/[^A-Z0-9._-]/i", "_", $myFile["name"]);
 
@@ -46,6 +53,7 @@
 				$name = $parts["filename"] . "-" . $i . "." . $parts["extension"];
 			}
 
+			echo "file name is: " . $_SESSION["file_name"];
 			// preserve file from temporary directory
 			$success = move_uploaded_file($myFile["tmp_name"],
 				UPLOAD_DIR . $name);
@@ -67,60 +75,77 @@
 				
 				$string_file = file_get_contents(UPLOAD_DIR . $name);
 				
-				
-				echo "<p>File Uploaded Successfully! :)</p>";
-				
 				$filesize = filesize(UPLOAD_DIR . $name);
 				//$filetext is a string
 				$filetext = fread( $file, $filesize );
-					
-				//Tells us how big the file is and what it says
-				echo ( "File size : $filesize bytes" );
-				echo ( "<pre>$filetext</pre>" );
-				
-				//Tells us the name the file was saved as in the uploads folder
-				//echo "<p>Uploaded file saved as " . $name . ".</p>";
-				
+
 				$string = "";
+
+				$quser = $_SESSION["username"];
+
+				$result = mysqli_query($connection, "SELECT id FROM users WHERE username = '$quser'")
+					or die("Failed  to query database " .mysql_error());
+
+				$row = $result->fetch_assoc();
+				$userFK = $row["id"];
+				echo "userFK: " . $userFK;
 				
 				if ($_POST['encrypt'] == "encrypt")
 				{
-					echo "<p>User selected Encrypt</p>";
 					
 					$string = mcrypt_encrypt(MCRYPT_TWOFISH, $key, $filetext, MCRYPT_MODE_CBC,"some 16 byte iv.");
-					$quser = $_SESSION["username"];
 
-					$result = mysqli_query($connection, "SELECT id FROM users WHERE username = '$quser'")
-						or die("Failed  to query database " .mysql_error());
+					echo $string;
 
-					$row = $result->fetch_assoc();
-					$userFK = $row["id"];
+					$newFile = fopen(UPLOAD_DIR . $name, "w")
+						or die("Unable to open file!");
+
+					fwrite($newFile, $string);
+					fclose($newFile);
 
 					$inserting = mysqli_query($connection, "INSERT INTO files(fileName,fileKey, userID) VALUES('$name','$key','$userFK')")
 						or die("Failed  to query database " .mysql_error());
-					
+
 				}
 				else
 				{
-					echo "<p>User selected Decrypt</p>";
+					$db_key = "";
+				
+					$result_key  = mysqli_query($connection, "SELECT fileKey FROM files WHERE userID = '$userFK' and fileName = '$sess_file' LIMIT 1") or die("Failed to query database.");
 
-					$decrypt = mcrypt_decrypt(MCRYPT_TWOFISH, $key, $string, MCRYPT_MODE_CBC,"some 16 byte iv.");
-					// echo $decrypt;
-					
+					echo "<br>name is: " . $name;
+
+					if ($result_key->num_rows > 0) {
+					    // output data of each row
+					    while($row = $result_key->fetch_assoc()) {
+					     	$db_key = $row["fileKey"];
+					    }
+
+					    $decrypt = mcrypt_decrypt(MCRYPT_TWOFISH, $db_key, $filetext, MCRYPT_MODE_CBC,"some 16 byte iv.");
+
+					    array_map('unlink', glob(UPLOAD_DIR."/*.txt"));
+
+					    $newFile = fopen(UPLOAD_DIR . $name, "w")
+						or die("Unable to open file!");
+
+						fwrite($newFile, $decrypt);
+						fclose($newFile);
+
+					} else {
+					    echo "0 results";
+					}
 				}
 				
 				fclose($file);
 				
-				// echo "<script>setTimeout(\"location.href = 'http://geocrypto.mollycodes.com/home.php';\",3500);</script>";
-				
-				//exit;
-
-				// Delete the file after use
-				array_map('unlink', glob(UPLOAD_DIR."/*.txt"));
 			}
 			
 		}
 		?>
 		
+		<FORM METHOD="LINK" ACTION="download.php">
+			<INPUT TYPE="submit" VALUE="Click to Download File">
+		</FORM>
+
 	</body>
 </html>
