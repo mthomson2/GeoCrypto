@@ -20,6 +20,7 @@
 <html>
     <head>
        <title>Encrypting/Decrypting the File</title>
+       <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
 	</head>
 	<body>
 
@@ -43,15 +44,14 @@
 			// ensure a safe filename
 			$name = preg_replace("/[^A-Z0-9._-]/i", "_", $myFile["name"]);
 
-			// don't overwrite an existing file
-			$i = 0;
-			$parts = pathinfo($name);
-			while (file_exists(UPLOAD_DIR . $name)) {
-				$i++;
-				$name = $parts["filename"] . "-" . $i . "." . $parts["extension"];
-			}
+			// // don't overwrite an existing file
+			// $i = 0;
+			// $parts = pathinfo($name);
+			// while (file_exists(UPLOAD_DIR . $name)) {
+			// 	$i++;
+			// 	$name = $parts["filename"] . "-" . $i . "." . $parts["extension"];
+			// }
 
-			echo "file name is: " . $_SESSION["file_name"];
 			// preserve file from temporary directory
 			$success = move_uploaded_file($myFile["tmp_name"],
 				UPLOAD_DIR . $name);
@@ -116,7 +116,7 @@
 
 					    $decrypt = mcrypt_decrypt(MCRYPT_TWOFISH, $db_key, $filetext, MCRYPT_MODE_CBC,"some 16 byte iv.");
 
-					    array_map('unlink', glob(UPLOAD_DIR."/*.txt"));
+					    array_map('unlink', glob(UPLOAD_DIR."/*.*"));
 
 					    $newFile = fopen(UPLOAD_DIR . $name, "w")
 						or die("Unable to open file!");
@@ -136,9 +136,26 @@
 		}
 		?>
 		
-		<FORM METHOD="LINK" ACTION="download.php">
-			<INPUT TYPE="submit" VALUE="Click to Download File">
-		</FORM>
+		<div id = "dwnbtn">
+			<a href="download.php" class="myButton">Click to Download File</a>
+		</div>
+
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+
+		<div class="row">
+			<div class = "col-lg-12 text-center">
+				<p>After you have successfully downloaded your file, please click the below button:</p>
+			</div>
+		</div>
+
+		<div>
+			<a href="thankyou.html" class="btnn">Click to Continue</a>
+		</div>
 
 	</body>
 </html>

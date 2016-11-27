@@ -20,5 +20,7 @@
     set_time_limit(0); 
     readfile($file);
 
-    array_map('unlink', glob(UPLOAD_DIR."/*.txt"));
+    array_map('unlink', glob(UPLOAD_DIR."/*.*"));
+
+    header("Location: http://www.geocrypto.mollycodes.com/thankyou.html");
 ?>
