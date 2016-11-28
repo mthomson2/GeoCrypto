@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p> Encrypt String </p>
+<p id="key"></p>
+<p id="encrypt"></p>
+<p id="decrypt"></p>
+<button onclick="encryptor()"> Encrypt </button>
+<button onclick="decryptor()"> Decrypt </button>
+
+<script>
+function encryptor()
+ {
+  //read in file 
+  //convert file to string 
+   var string = "Gratitude unlocks the fullness of life. It turns what we have into enough, and more. It turns denial into acceptance, chaos to order, confusion to clarity. It can turn a meal into a feast, a house into a home, a stranger into a friend."; 
+
+  //read in longitude and latitude 
+   var lng = 38.78;
+   var lat = -77.26;
+
+   var key = hash(lng, lat);
+   //document.getElementById("key").innerHTML = "key is " + key;
+   var en = encrypt(key, string);
+   //document.getElementById("encrypt").innerHTML = "encrypted file is: " + en;
+   //var de = decrypt(key, en);
+   //document.getElementById("decrypt").innerHTML = "decrypted file is: " + de;
+ }
+ function decryptor()
+ {
+   //get key and decrypted file from database 
+   var de = decrypt(key, en);
+ }
+
+//function that takes a longitude and latitude to create
+  //a key 
+  function hash(lng,lat)
+  {
+   var key = lng * lat; 
+   if (key < 0)
+      {
+        key = key * -1;
+      }
+   key = key /1234;
+   key = Math.floor(key);
+   return key;
+  }
+
+ function encrypt(key, file)
+  {
+    //an array of words 
+    var ret = " ";
+    var words = file.split(" ");
+    for (var i =0; i <words.length; i++)
+      {
+        //one word at a time
+        var word = words[i];
+        for (var j =0; j <word.length; j++)
+        {
+          //one char at a time
+          var char = word.charCodeAt(j);
+          char = char + key;
+          ret = ret + " " + char;
+        }
+        ret = ret + "*";
+      }
+      return ret;
+
+
+  }
+function decrypt(key, encryptedfile)
+{
+  var ret = " ";
+  encryptedfile = encryptedfile.trim();
+  var words = encryptedfile.split("*");
+
+  for(var i=0; i <words.length; i++)
+  {
+   
+    if (i in words)//(words[i] != " ")
+    {
+      //get each word
+      var word = words[i].trim();
+      //array of char
+      var char = word.split(" ");
+   
+   
+      for(var j=0; j <char.length; j++)
+      {
+        if (j in char)
+          {
+            var dec = char[j].trim();
+            dec = parseFloat(dec) -key;
+             
+            var dec = String.fromCharCode(dec);
+            ret = ret + dec;
+          }
+      }
+    }
+    ret = ret + " ";
+
+  }
+ 
+  return ret;
+}
+
+</script>
+
+</body>
+</html>
+
