@@ -21,6 +21,7 @@
     <head>
        <title>Encrypting/Decrypting the File</title>
        <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+       <link href="css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body>
 
@@ -148,13 +149,13 @@
 		<br>
 
 		<div class="row">
-			<div class = "col-lg-12 text-center">
+			<div class = "col-lg-12 text-center" style="float: right; margin-right: 10px;">
 				<p>After you have successfully downloaded your file, please click the below button:</p>
 			</div>
 		</div>
 
 		<div>
-			<a href="thankyou.html" class="btnn">Click to Continue</a>
+			<a href="thankyou.html" class="btn btn-primary" style="float: right; margin-right:10px;">Click to Continue</a>
 		</div>
 
 	</body>
